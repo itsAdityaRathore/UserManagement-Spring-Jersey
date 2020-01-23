@@ -1,29 +1,23 @@
 package com.spring.jerseydemo;
 
-import java.io.Serializable;
+import javax.persistence.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+@Entity
+@Table(name = "userJersy")
+public class User {
 
-//@XmlAccessorType(XmlAccessType.NONE)
-//@XmlRootElement(name = "user")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @XmlAttribute(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private int id;
 
-    @XmlAttribute(name = "uri")
+    @Column(name = "uri")
     private String uri;
 
-    @XmlElement(name = "firstName")
+    @Column(name = "firstName")
     private String firstName;
 
-    @XmlElement(name = "lastName")
+    @Column(name = "lastName")
     private String lastName;
 
     public int getId() {
@@ -56,5 +50,24 @@ public class User implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public User(String uri, String firstName, String lastName) {
+        this.uri = uri;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public User() {
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", uri='" + uri + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

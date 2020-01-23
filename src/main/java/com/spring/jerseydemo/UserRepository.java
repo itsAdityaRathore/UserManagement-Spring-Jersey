@@ -1,24 +1,16 @@
 package com.spring.jerseydemo;
 
-import java.util.ArrayList;
+import org.springframework.stereotype.Repository;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.ws.rs.core.Response;
+import java.util.List;
 
-//@XmlAccessorType(XmlAccessType.NONE)
-//@XmlRootElement(name = "users")
-public class UserRepository {
+@Repository
+public interface UserRepository {
 
-    //@XmlElement(name="user")
-    private ArrayList<User> users;
 
-    public ArrayList<User> getUsers() {
-        return users;
-    }
+    List<User> getUsers();
 
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
+    String insertUsers();
+
 }

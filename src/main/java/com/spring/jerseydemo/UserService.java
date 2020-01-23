@@ -1,111 +1,60 @@
 package com.spring.jerseydemo;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
-//@XmlAccessorType(XmlAccessType.NONE)
-//@XmlRootElement(name = "users")
-@Path("/users")
-public class UserService {
-    private static Map<Integer, User> DB = new HashMap<>();
+@Service
+public class UserService implements UserRepository {
 
-    static {
-        User user1 = new User();
-        user1.setId(1);
-        user1.setFirstName("John");
-        user1.setLastName("Wick");
-        user1.setUri("/user-management/1");
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("UserJersey");
 
-        User user2 = new User();
-        user2.setId(2);
-        user2.setFirstName("Harry");
-        user2.setLastName("Potter");
-        user2.setUri("/user-management/2");
+    @Override
+    public List<User> getUsers() {
+        EntityManager em = emf.createEntityManager();
 
-        DB.put(user1.getId(), user1);
-        DB.put(user2.getId(), user2);
+        // em.getTransaction().begin();
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+
+        Root<User> stud = cq.from(User.class);
+
+        //cq.select(stud.get("firstName"));
+
+        CriteriaQuery<User> select = cq.select(stud);
+        TypedQuery<User> q = em.createQuery(select);
+        List<User> list = q.getResultList();
+
+        return list;
     }
 
-    @GET
-    @Produces("application/json")
-    public UserRepository getAllUsers() {
-        UserRepository userRepository = new UserRepository();
-        userRepository.setUsers(new ArrayList<>(DB.values()));
-        return userRepository;
+    @Override
+    public String insertUsers() {
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+
+        User s1 = new User("/user-management/1", "Aditya", "Rathore");
+        User s2 = new User("/user-management/2", "Rahul", "Jain");
+
+        em.persist(s1);
+        em.persist(s2);
+        em.getTransaction().commit();
+
+        em.close();
+        return "Insertion Successful";
+
     }
 
-    @POST
-    @Consumes("application/json")
-    public Response createUser(User user) throws URISyntaxException {
-        if (user.getFirstName() == null || user.getLastName() == null) {
-            return Response
-                    .status(400)
-                    .entity("Please provide all mandatory inputs")
-                    .build();
-        }
-        user.setId(DB.values().size() + 1);
-        user.setUri("/user-management/" + user.getId());
-        DB.put(user.getId(), user);
-        return Response
-                .status(201)
-                .entity("Insertion successful")
-                .contentLocation(new URI(user.getUri()))
-                .build();
-    }
-
-    @GET
-    @Path("/{id}")
-    @Produces("application/json")
-    public Response getUserById(@PathParam("id") int id) throws URISyntaxException {
-        User user = DB.get(id);
-        if (user == null) {
-            return Response.status(404).build();
-        }
-        return Response
-                .status(200)
-                .entity(user)
-                .contentLocation(new URI("/user-management/" + id)).build();
-    }
-
-    @PUT
-    @Path("/{id}")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Response updateUser(@PathParam("id") int id, User user) throws URISyntaxException {
-        User temp = DB.get(id);
-        if (user == null) {
-            return Response.status(404).build();
-        }
-        temp.setFirstName(user.getFirstName());
-        temp.setLastName(user.getLastName());
-        DB.put(temp.getId(), temp);
-        return Response.status(200).entity(temp).build();
-    }
-
-    @DELETE
-    @Path("/{id}")
-    public Response deleteUser(@PathParam("id") int id) throws URISyntaxException {
-        User user = DB.get(id);
-        if (user != null) {
-            DB.remove(user.getId());
-            return Response.status(200).build();
-        }
-        return Response.status(404).build();
-    }
 }
