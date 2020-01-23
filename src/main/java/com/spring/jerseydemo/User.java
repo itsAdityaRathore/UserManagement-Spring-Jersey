@@ -58,6 +58,11 @@ public class User {
         this.lastName = lastName;
     }
 
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public User() {
     }
 

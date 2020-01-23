@@ -13,4 +13,10 @@ public interface UserRepository {
 
     String insertUsers();
 
+    String createUser(User user);
+
+    User findById(int id);
+
+    Response update(User user);
+
 }
