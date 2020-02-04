@@ -1,5 +1,6 @@
-package com.spring.jerseydemo;
+package com.spring.jerseydemo.Dao;
 
+import com.spring.jerseydemo.Model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.ws.rs.core.Response;

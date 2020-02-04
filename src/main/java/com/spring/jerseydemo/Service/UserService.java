@@ -1,6 +1,7 @@
-package com.spring.jerseydemo;
+package com.spring.jerseydemo.Service;
 
-import org.omg.CORBA.NO_RESPONSE;
+import com.spring.jerseydemo.Dao.UserRepository;
+import com.spring.jerseydemo.Model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +13,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.validation.constraints.Null;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Service
@@ -97,7 +96,7 @@ public class UserService implements UserRepository {
             //Response.status(Response.Status.OK).entity("User Updated").build();
         }
 
-        return Response.status(Response.Status.OK).entity("User Updated : " + updateUser).build();
+        return Response.status(Response.Status.OK).entity("User Updated :  " + updateUser).build();
     }
 
 }

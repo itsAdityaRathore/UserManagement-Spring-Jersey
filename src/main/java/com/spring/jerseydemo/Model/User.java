@@ -1,4 +1,4 @@
-package com.spring.jerseydemo;
+package com.spring.jerseydemo.Model;
 
 import javax.persistence.*;
 
